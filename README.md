@@ -28,4 +28,31 @@ If you plan to change the browser to Firefox or Chrome, edit the line `browser =
 
 Before you run **InstAnalytics.py**, edit the `users = ['yotta_life']` list to add as much as you want public Instagram accounts. It's that simple!
 
-## Run
+## JSON output example
+
+```JSON
+[
+  {
+    "username": "yotta_life", 
+    "date": "2015-11-23", 
+    "data": {
+      "following": 164, 
+      "followers": 351000, 
+      "pLikesT": 966048, 
+      "posts": 419, 
+      "photos": [
+        {
+          "pId": "-aOwFCMU6P", 
+          "pLikes": 1763, 
+          "pComments": 24
+        },
+          ...
+        {
+          "pId": "-Z_AthsU8T", 
+          "pLikes": 2096, 
+          "pComments": 27
+        }
+      ]
+    }
+  }
+]
