@@ -4,6 +4,8 @@
 
 Each day, this Python script scraps the web version of Instagram, to get the number of posts, followers, following + likes and comments per photo from any **public** account. The data is then stored in a JSON file (`data/InstAnalytics.json`) so you can get track its growth.
 
+As I made it to run on my Raspberry Pi, it uses PhantomJS, a lightweight headless browser (which is perfect for a RPi, especially in terms of resources consumption).
+
 For more info, check out my [blog post](http://nbyim.com/monitor-instagram-accounts-without-using-api).
 
 ## Requirements
