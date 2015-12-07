@@ -152,7 +152,7 @@ if __name__ == '__main__':
 	
 	while True:
 		# Scheduled, every day at 11pm
-		if datetime.now().hour != 23:
+		if datetime.now().hour == 23:
 			print datetime.now().strftime(timeFormat),
 			try:
 				InstAnalytics()
