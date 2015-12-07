@@ -130,3 +130,35 @@ def InstAnalytics():
 	os.remove('ghostdriver.log')
 
 
+# ----------------------------------------
+#  Main
+# ----------------------------------------
+
+if __name__ == '__main__':
+
+	# Desired capabilities for PhantomJS
+	dcap = dict(DesiredCapabilities.PHANTOMJS)
+	dcap['phantomjs.page.settings.userAgent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.81 Safari/537.36'
+
+	timeFormat = "%Y-%m-%d"
+
+	# Check if the JSON file exists, otherwise create it
+	if os.path.isfile('data/InstAnalytics.json') == False:
+		iaDictionary = []
+		with open('data/InstAnalytics.json', 'w') as iaFile:
+			json.dump(iaDictionary, iaFile, indent=4)
+
+	print 'Scrapping data from', users, 'account(s) every day at 11pm\n'
+	
+	while True:
+		# Scheduled, every day at 11pm
+		if datetime.now().hour != 23:
+			print datetime.now().strftime(timeFormat),
+			try:
+				InstAnalytics()
+				time.sleep(82800) # Sleep for 23 hours
+			except Exception, e:
+				print 'Error', e
+				time.sleep(30) # Retry after 30s
+		else:
+			time.sleep(60) # Check every minute
