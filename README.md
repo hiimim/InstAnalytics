@@ -33,28 +33,32 @@ Before you run **InstAnalytics.py**, edit the `users = ['yotta_life']` list to a
 ## JSON output example
 
 ```JSON
+
 [
-  {
-    "username": "yotta_life", 
-    "date": "2015-11-23", 
-    "data": {
-      "following": 164, 
-      "followers": 351000, 
-      "pLikesT": 966048, 
-      "posts": 419, 
-      "photos": [
-        {
-          "pId": "-aOwFCMU6P", 
-          "pLikes": 1763, 
-          "pComments": 24
-        },
-          ...
-        {
-          "pId": "-Z_AthsU8T", 
-          "pLikes": 2096, 
-          "pComments": 27
+    {
+        "username": "yotta_life", 
+        "date": "2016-04-21", 
+        "data": {
+            "following": 231, 
+            "followers": 649000, 
+            "pLikesT": 2029474, 
+            "posts": 608, 
+            "photos": [
+                {
+                    "pId": "BEZLlc8sU_v", 
+                    "pLikes": 4486, 
+                    "pComments": 205
+                }, 
+                ...
+                {
+                    "pId": "uuhChFMU92", 
+                    "pLikes": 282, 
+                    "pComments": 19
+                }
+            ]
         }
-      ]
     }
-  }
 ]
+```
+
+The complete output is available here: [https://gist.github.com/helloitsim/c3a6ce83e302a1279398b896c1c36ccb](https://gist.github.com/helloitsim/c3a6ce83e302a1279398b896c1c36ccb).
