@@ -27,11 +27,11 @@ def InstAnalytics():
 	for user in users:
 
 		# Load JSON
-		with open('data/InstAnalytics.json') as iaFile:
+		with open('InstAnalytics.json') as iaFile:
 			iaDictionary = json.load(iaFile)
 
 		# Backup JSON
-		with open('data/InstAnalytics_backup.json', 'w') as iaFile:
+		with open('InstAnalytics_backup.json', 'w') as iaFile:
 			json.dump(iaDictionary, iaFile, indent=4)
 
 		# User's profile
@@ -42,9 +42,9 @@ def InstAnalytics():
 		soup = BeautifulSoup(browser.page_source, 'html.parser')
 
 		# User's statistics
-		postsT     = soup.find('span', {'class': re.compile(r'.*PostsStatistic__count.*')}).contents[0]
-		followersT = soup.find('span', {'class': re.compile(r'.*FollowedByStatistic__count.*')}).contents[0]
-		followingT = soup.find('span', {'class': re.compile(r'.*FollowsStatistic__count.*')}).contents[0]
+		postsT     = soup.html.body.span.section.main.article.header.findAll('div', recursive=False)[1].ul.findAll('li', recursive=False)[0].span.findAll('span', recursive=False)[1].getText()
+		followersT = soup.html.body.span.section.main.article.header.findAll('div', recursive=False)[1].ul.findAll('li', recursive=False)[1].span.findAll('span', recursive=False)[1].getText()
+		followingT = soup.html.body.span.section.main.article.header.findAll('div', recursive=False)[1].ul.findAll('li', recursive=False)[2].span.findAll('span', recursive=False)[1].getText()
 
 		# Remove all non-numeric characters
 		posts     = int(re.sub('[^0-9]', '', postsT))
@@ -61,7 +61,7 @@ def InstAnalytics():
 
 		if posts > 12:
 			# Click the 'Load more' button
-			browser.find_element_by_xpath('//a[contains(@href, "max")]').click()
+			browser.find_element_by_xpath('/html/body/span/section/main/article/div/div[3]/a').click()
 
 		if posts > 24:
 			# Load more by scrolling to the bottom of the page
@@ -77,11 +77,18 @@ def InstAnalytics():
 		soup = BeautifulSoup(browser.page_source, 'html.parser')
 
 		# User's photos statistics
+
+		links = []
+		for link in soup.html.body.span.section.main.article.findAll('a'):
+			if link.get('href')[:3] == '/p/': links.append(link.get('href'))
+
 		photosDic = []
 		pLikesT = 0
-		for link in soup.find('div', attrs={'data-reactid': re.compile(r'.*\bmostRecentSection\b.*')}).div.findAll('a'):
+		pCounter = 0
+
+		for link in links:
 			# Photo Id
-			pId = link['href'].split("/")[2]
+			pId = link.split("/")[2]
 			# Hover over a photo reveals Likes & Comments
 			time.sleep(0.2)
 			photo = browser.find_element_by_xpath('//a[contains(@href, "' + pId + '")]')
@@ -90,9 +97,9 @@ def InstAnalytics():
 			# Soup
 			soup = BeautifulSoup(browser.page_source, 'html.parser')
 			# Likes
-			pLikes = int(re.sub('[^0-9]', '', soup.find('li', {'class': re.compile(r'.*__statsLikes.*')}).findAll('span')[1].contents[0]))
+			pLikes    = int(re.sub('[^0-9]', '', soup.html.body.span.section.main.article.findAll('div', recursive=False)[0].findAll('div', recursive=False)[0].findAll('a')[pCounter].find('ul').findAll('li', recursive=False)[0].findAll('span', recursive=False)[1].getText()))
 			# Comments
-			pComments = int(re.sub('[^0-9]', '', soup.find('li', {'class': re.compile(r'.*__statsComments.*')}).findAll('span')[1].contents[0]))
+			pComments = int(re.sub('[^0-9]', '', soup.html.body.span.section.main.article.findAll('div', recursive=False)[0].findAll('div', recursive=False)[0].findAll('a')[pCounter].find('ul').findAll('li', recursive=False)[1].findAll('span', recursive=False)[1].getText()))
 			# Photo dictionary
 			photoDic = {
 				'pId': pId,
@@ -102,6 +109,8 @@ def InstAnalytics():
 			photosDic.append(photoDic)
 			# Total likes
 			pLikesT += pLikes
+			# Simple counter
+			pCounter += 1
 
 		# Dictionary
 		userDic = {
@@ -118,7 +127,7 @@ def InstAnalytics():
 
 		# Add data to JSON
 		iaDictionary.append(userDic)
-		with open('data/InstAnalytics.json', 'w') as iaFile:
+		with open('InstAnalytics.json', 'w') as iaFile:
 			json.dump(iaDictionary, iaFile, indent=4)
 
 		print '|', user
@@ -127,7 +136,8 @@ def InstAnalytics():
 	browser.quit()
 
 	# Remove ghostdriver.log
-	os.remove('ghostdriver.log')
+	if os.path.isfile('ghostdriver.log') == True:
+		os.remove('ghostdriver.log')
 
 
 
@@ -144,9 +154,9 @@ if __name__ == '__main__':
 	timeFormat = "%Y-%m-%d"
 
 	# Check if the JSON file exists, otherwise create it
-	if os.path.isfile('data/InstAnalytics.json') == False:
+	if os.path.isfile('InstAnalytics.json') == False:
 		iaDictionary = []
-		with open('data/InstAnalytics.json', 'w') as iaFile:
+		with open('InstAnalytics.json', 'w') as iaFile:
 			json.dump(iaDictionary, iaFile, indent=4)
 
 	print 'Scrapping data from', users, 'account(s) every day at 11pm\n'
