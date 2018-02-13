@@ -127,7 +127,7 @@ def InstAnalytics():
 
 		# Add data to JSON
 		iaDictionary.append(userDic)
-		with open('InstAnalytics.json', 'w') as iaFile:
+		with open('InstAnalytics.json', 'w+') as iaFile:
 			json.dump(iaDictionary, iaFile, indent=4)
 
 		print '|', user
@@ -153,14 +153,8 @@ if __name__ == '__main__':
 
 	timeFormat = "%Y-%m-%d"
 
-	# Check if the JSON file exists, otherwise create it
-	if os.path.isfile('InstAnalytics.json') == False:
-		iaDictionary = []
-		with open('InstAnalytics.json', 'w') as iaFile:
-			json.dump(iaDictionary, iaFile, indent=4)
-
 	print 'Scrapping data from', users, 'account(s) every day at 11pm\n'
-	
+
 	while True:
 		# Scheduled, every day at 11pm
 		if datetime.now().hour == 23:
