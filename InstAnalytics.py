@@ -22,7 +22,7 @@ users = ['yotta_life']
 def InstAnalytics():
 
 	# Launch browser
-	browser = webdriver.PhantomJS(desired_capabilities=dcap)
+	browser = webdriver.Chrome()
 
 	for user in users:
 
@@ -42,9 +42,9 @@ def InstAnalytics():
 		soup = BeautifulSoup(browser.page_source, 'html.parser')
 
 		# User's statistics
-		postsT     = soup.html.body.span.section.main.article.header.findAll('div', recursive=False)[1].ul.findAll('li', recursive=False)[0].span.findAll('span', recursive=False)[1].getText()
-		followersT = soup.html.body.span.section.main.article.header.findAll('div', recursive=False)[1].ul.findAll('li', recursive=False)[1].span.findAll('span', recursive=False)[1].getText()
-		followingT = soup.html.body.span.section.main.article.header.findAll('div', recursive=False)[1].ul.findAll('li', recursive=False)[2].span.findAll('span', recursive=False)[1].getText()
+		postsT     = soup.html.body.span.section.main.div.header.section.ul.findAll('li', recursive=False)[0].a.span.getText()
+		followersT = soup.html.body.span.section.main.div.header.section.ul.findAll('li', recursive=False)[1].a.span.getText()
+		followingT = soup.html.body.span.section.main.div.header.section.ul.findAll('li', recursive=False)[2].a.span.getText()
 
 		# Remove all non-numeric characters
 		posts     = int(re.sub('[^0-9]', '', postsT))
@@ -58,10 +58,6 @@ def InstAnalytics():
 		if 'm' in postsT: 	  posts     = posts     * 1000000
 		if 'm' in followersT: followers = followers * 1000000
 		if 'm' in followingT: following = following * 1000000
-
-		if posts > 12:
-			# Click the 'Load more' button
-			browser.find_element_by_xpath('/html/body/span/section/main/article/div/div[3]/a').click()
 
 		if posts > 24:
 			# Load more by scrolling to the bottom of the page
@@ -97,9 +93,9 @@ def InstAnalytics():
 			# Soup
 			soup = BeautifulSoup(browser.page_source, 'html.parser')
 			# Likes
-			pLikes    = int(re.sub('[^0-9]', '', soup.html.body.span.section.main.article.findAll('div', recursive=False)[0].findAll('div', recursive=False)[0].findAll('a')[pCounter].find('ul').findAll('li', recursive=False)[0].findAll('span', recursive=False)[1].getText()))
+			pLikes    = int(re.sub('[^0-9]', '', soup.html.body.span.section.main.article.findAll('div', recursive=False)[0].findAll('div', recursive=False)[0].findAll('a')[pCounter].find('ul').findAll('li', recursive=False)[0].findAll('span', recursive=False)[0].getText()))
 			# Comments
-			pComments = int(re.sub('[^0-9]', '', soup.html.body.span.section.main.article.findAll('div', recursive=False)[0].findAll('div', recursive=False)[0].findAll('a')[pCounter].find('ul').findAll('li', recursive=False)[1].findAll('span', recursive=False)[1].getText()))
+			pComments = int(re.sub('[^0-9]', '', soup.html.body.span.section.main.article.findAll('div', recursive=False)[0].findAll('div', recursive=False)[0].findAll('a')[pCounter].find('ul').findAll('li', recursive=False)[1].findAll('span', recursive=False)[0].getText()))
 			# Photo dictionary
 			photoDic = {
 				'pId': pId,
@@ -130,7 +126,7 @@ def InstAnalytics():
 		with open('InstAnalytics.json', 'w') as iaFile:
 			json.dump(iaDictionary, iaFile, indent=4)
 
-		print '|', user
+		print('|', user)
 
 	# Quit browser
 	browser.quit()
@@ -159,17 +155,17 @@ if __name__ == '__main__':
 		with open('InstAnalytics.json', 'w') as iaFile:
 			json.dump(iaDictionary, iaFile, indent=4)
 
-	print 'Scrapping data from', users, 'account(s) every day at 11pm\n'
+	print('Scrapping data from', users, 'account(s) every day at 11pm\n')
 	
 	while True:
 		# Scheduled, every day at 11pm
 		if datetime.now().hour == 23:
-			print datetime.now().strftime(timeFormat),
+			print(datetime.now().strftime(timeFormat)),
 			try:
 				InstAnalytics()
 				time.sleep(82800) # Sleep for 23 hours
-			except Exception, e:
-				print 'Error', e
+			except Exception as e:
+				print('Error', e)
 				time.sleep(30) # Retry after 30s
 		else:
 			time.sleep(60) # Check every minute
