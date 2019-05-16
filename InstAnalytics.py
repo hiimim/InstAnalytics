@@ -22,7 +22,9 @@ users = ['yotta_life']
 def InstAnalytics():
 
 	# Launch browser
-	browser = webdriver.PhantomJS(desired_capabilities=dcap)
+	options = webdriver.ChromeOptions()
+	options.add_experimental_option('prefs', {'intl.accept_languages': 'en,en_US'})
+	browser = webdriver.Chrome(options=options)
 
 	for user in users:
 
