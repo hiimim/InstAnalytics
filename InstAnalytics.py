@@ -65,7 +65,7 @@ def InstAnalytics():
 
 		if posts > 24:
 			# Load more by scrolling to the bottom of the page
-			for i in range (0, (posts-24)//12):
+			for i in range (0, (posts-24)//12 + 1):
 				browser.execute_script('window.scrollTo(0, document.body.scrollHeight)')
 				time.sleep(0.1)
 				browser.execute_script('window.scrollTo(0, 0)')
